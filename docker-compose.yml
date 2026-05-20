@@ -1,0 +1,29 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: smart-leads
+    ports:
+      - "27017:27017"
+
+  server:
+    build: ./server
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+
+volumes:
+  mongo_data:
